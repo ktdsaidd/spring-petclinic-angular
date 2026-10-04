@@ -16,7 +16,7 @@
   ~  */
   -->
 
-<table [hidden]="noVisits" class=" table table-sm">
+<table *ngIf="visits?.length" class="table table-sm">
   <thead>
   <tr>
     <th>Visit Date</th>

@@ -20,7 +20,7 @@
  * @author Vitaliy Fedoriv
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import {OwnerService} from '../owner.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Owner} from '../owner';
@@ -34,16 +34,15 @@ import {Owner} from '../owner';
 })
 export class OwnerDetailComponent implements OnInit {
   errorMessage: string;
-  owner: Owner;
+  owner = signal<Owner>({} as Owner);
 
   constructor(private route: ActivatedRoute, private router: Router, private ownerService: OwnerService) {
-    this.owner = {} as Owner;
   }
 
   ngOnInit() {
     const ownerId = this.route.snapshot.params.id;
     this.ownerService.getOwnerById(ownerId).subscribe(
-      owner => this.owner = owner,
+      owner => this.owner.set(owner),
       error => this.errorMessage = error as any);
   }
 
@@ -52,7 +51,7 @@ export class OwnerDetailComponent implements OnInit {
   }
 
   editOwner() {
-    this.router.navigate(['/owners', this.owner.id, 'edit']);
+    this.router.navigate(['/owners', this.owner().id, 'edit']);
   }
 
   addPet(owner: Owner) {
@@ -61,3 +60,4 @@ export class OwnerDetailComponent implements OnInit {
 
 
 }
+

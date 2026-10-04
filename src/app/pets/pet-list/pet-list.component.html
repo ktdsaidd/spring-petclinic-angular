@@ -16,9 +16,9 @@
   ~  */
   -->
 
-<table [hidden]="deleteSuccess" class="table table-striped">
-  <tr>
-    <td valign="top">
+<div [hidden]="deleteSuccess" class="pet-row">
+  <div class="row">
+    <div class="col-md-5">
       <dl class="row">
         <dt class="col-sm-4">Name</dt>
         <dd class="col-sm-8">{{ pet.name }}</dd>
@@ -32,10 +32,9 @@
         <button class="btn btn-secondary" (click)="deletePet(pet)">Delete Pet</button>
         <button class="btn btn-secondary" (click)="addVisit(pet)">Add Visit</button>
       </div>
-    </td>
-    <td valign="top">
+    </div>
+    <div class="col-md-7">
       <app-visit-list [visits]="pet.visits"></app-visit-list>
-    </td>
-  </tr>
-
-</table>
+    </div>
+  </div>
+</div>

@@ -25,35 +25,31 @@
     <table class="table table-striped">
       <tr>
         <th>Name</th>
-        <td><b class="ownerFullName">{{ owner.firstName }} {{ owner.lastName }}</b></td>
+        <td><b class="ownerFullName">{{ owner().firstName }} {{ owner().lastName }}</b></td>
       </tr>
       <tr>
         <th>Address</th>
-        <td>{{ owner.address }}</td>
+        <td>{{ owner().address }}</td>
       </tr>
       <tr>
         <th>City</th>
-        <td>{{ owner.city }}</td>
+        <td>{{ owner().city }}</td>
       </tr>
       <tr>
         <th>Telephone</th>
-        <td>{{ owner.telephone }}</td>
+        <td>{{ owner().telephone }}</td>
       </tr>
     </table>
 
     <button class="btn btn-secondary" (click)="gotoOwnersList()">Back</button>
     <button class="btn btn-secondary" (click)="editOwner()">Edit Owner</button>
-    <button class="btn btn-secondary" (click)="addPet(owner)">Add New Pet</button>
+    <button class="btn btn-secondary" (click)="addPet(owner())">Add New Pet</button>
 
     <br />
     <br />
     <br />
     <h2>Pets and Visits</h2>
 
-    <table class="table table-striped">
-      <tr>
-        <app-pet-list *ngFor="let pet of owner.pets" [pet]="pet"></app-pet-list>
-      </tr>
-    </table>
+    <app-pet-list *ngFor="let pet of owner().pets" [pet]="pet"></app-pet-list>
   </div>
 </div>
