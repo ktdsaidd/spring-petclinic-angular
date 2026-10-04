@@ -39,6 +39,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 type Spy = Mock;
 import { OwnerService } from '../../owners/owner.service';
 import { PetService } from '../../pets/pet.service';
+import { VetService } from '../../vets/vet.service';
+import { Vet } from '../../vets/vet';
 
 class VisitServiceStub {
     getVisitById(visitId: string): Observable<Visit> {
@@ -51,6 +53,12 @@ class OwnerServiceStub {
 
 class PetServiceStub {
     getPetById(petId: string): Observable<Pet> {
+        return of();
+    }
+}
+
+class VetServiceStub {
+    getVets(): Observable<Vet[]> {
         return of();
     }
 }
@@ -72,6 +80,7 @@ describe('VisitEditComponent', () => {
                 { provide: VisitService, useClass: VisitServiceStub },
                 { provide: OwnerService, useClass: OwnerServiceStub },
                 { provide: PetService, useClass: PetServiceStub },
+                { provide: VetService, useClass: VetServiceStub },
                 { provide: Router, useClass: RouterStub },
                 { provide: ActivatedRoute, useClass: ActivatedRouteStub }
             ]
@@ -114,5 +123,24 @@ describe('VisitEditComponent', () => {
 
     it('should create VisitEditComponent', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should render vet select as optional (not required) on edit screen', () => {
+        const selectEl: HTMLSelectElement = fixture.debugElement.nativeElement.querySelector('select[name="veterinarianId"]');
+        expect(selectEl, 'vet select rendered').toBeTruthy();
+        expect(selectEl.required, 'vet select must NOT be required on edit screen').toBe(false);
+    });
+
+    it('should preselect assigned vet when loading an assigned visit', () => {
+        const assignedVisit: Visit = {
+            id: 1,
+            date: '2016-09-07',
+            description: 'checkup',
+            pet: testPet,
+            veterinarian: {id: 3, firstName: 'Linda', lastName: 'Swanson', specialties: []}
+        };
+        vi.spyOn(visitService, 'getVisitById').mockReturnValue(of(assignedVisit));
+        component.ngOnInit();
+        expect(component.visit.veterinarianId, 'existing vet preselected').toBe(3);
     });
 });

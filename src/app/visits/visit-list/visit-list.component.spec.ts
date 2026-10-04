@@ -111,4 +111,28 @@ describe('VisitListComponent', () => {
         expect(vi.mocked(spy).mock.calls.length > 0, 'deleteVisit called').toBe(true);
     });
 
+    it('should show vet name for assigned visits and "-" placeholder for unassigned', () => {
+        const assignedVisit: Visit = {
+            id: 1, date: '2016-09-07', description: 'checkup', pet: testPet,
+            veterinarian: {id: 1, firstName: 'James', lastName: 'Carter', specialties: []}
+        };
+        fixture.componentRef.setInput('visits', [assignedVisit]);
+        fixture.detectChanges();
+        const visitRows = Array.from(
+            fixture.debugElement.nativeElement.querySelectorAll('tr') as NodeListOf<HTMLTableRowElement>
+        ).filter(r => r.querySelector('button'));
+        expect(visitRows.length, 'visit row rendered').toBe(1);
+        expect(visitRows[0].cells[1].textContent.trim(), 'assigned visit shows vet name').toBe('James Carter');
+    });
+
+    it('should show "-" placeholder and keep other data for unassigned visits', () => {
+        fixture.detectChanges();
+        const visitRows = Array.from(
+            fixture.debugElement.nativeElement.querySelectorAll('tr') as NodeListOf<HTMLTableRowElement>
+        ).filter(r => r.querySelector('button'));
+        expect(visitRows.length, 'visit row rendered').toBe(1);
+        expect(visitRows[0].cells[1].textContent.trim(), 'unassigned visit shows placeholder').toBe('-');
+        expect(visitRows[0].cells[0].textContent.trim(), 'date kept').toBe('2016-09-07');
+    });
+
 });

@@ -40,6 +40,17 @@
       </div>
 
       <div class="row mb-3">
+        <label for="veterinarianId" class="col-sm-2 col-form-label">Vet</label>
+        <div class="col-sm-10">
+          <select id="veterinarianId" name="veterinarianId" class="form-select" required [(ngModel)]="visit.veterinarianId" #veterinarianId="ngModel" [class.is-valid]="veterinarianId.dirty && veterinarianId.valid" [class.is-invalid]="veterinarianId.dirty && veterinarianId.invalid">
+            <option [ngValue]="undefined" disabled selected>Select a vet</option>
+            <option *ngFor="let vet of vets" [ngValue]="vet.id">{{ vet.firstName }} {{ vet.lastName }}</option>
+          </select>
+          <div class="invalid-feedback" *ngIf="veterinarianId.dirty && veterinarianId.hasError('required')">Vet is required</div>
+        </div>
+      </div>
+
+      <div class="row mb-3">
         <label for="description" class="col-sm-2 col-form-label">Description</label>
         <div class="col-sm-10">
           <input id="description" name="description" class="form-control" minlength="1" maxlength="255" required type="text" [(ngModel)]="visit.description" #description="ngModel" [class.is-valid]="description.dirty && description.valid" [class.is-invalid]="description.dirty && description.invalid" />

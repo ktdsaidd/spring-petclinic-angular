@@ -20,18 +20,22 @@
   <thead>
   <tr>
     <th>Visit Date</th>
+    <th>Vet</th>
     <th>Description</th>
     <th>Actions</th>
   </tr>
   </thead>
+  <tbody>
   <tr *ngFor="let visit of visits">
     <td>{{ visit.date }}</td>
+    <td>{{ visit.veterinarian?.firstName }} {{ visit.veterinarian?.lastName }}{{ visit.veterinarian ? '' : '-' }}</td>
     <td>{{ visit.description }}</td>
     <td>
       <button class="btn btn-secondary" (click)="editVisit(visit)">Edit Visit</button>
       <button class="btn btn-secondary" (click)="deleteVisit(visit)">Delete Visit</button>
     </td>
   </tr>
+  </tbody>
 </table>
 
 

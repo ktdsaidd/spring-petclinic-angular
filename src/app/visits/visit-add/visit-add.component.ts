@@ -31,6 +31,8 @@ import {Owner} from '../../owners/owner';
 
 import moment from 'moment';
 import {OwnerService} from '../../owners/owner.service';
+import {VetService} from '../../vets/vet.service';
+import {Vet} from '../../vets/vet';
 
 @Component({
   selector: 'app-visit-add',
@@ -46,10 +48,12 @@ export class VisitAddComponent implements OnInit {
   currentPetType: PetType;
   addedSuccess = false;
   errorMessage: string;
+  vets: Vet[] = [];
 
   constructor(private visitService: VisitService,
               private petService: PetService,
               private ownerService: OwnerService,
+              private vetService: VetService,
               private router: Router,
               private route: ActivatedRoute) {
     this.visit = {} as Visit;
@@ -61,6 +65,9 @@ export class VisitAddComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.route.parent);
+    this.vetService.getVets().subscribe(
+      vets => this.vets = [...vets].sort((a, b) => a.firstName.localeCompare(b.firstName)),
+      error => this.errorMessage = error as any);
     const petId = this.route.snapshot.params.id;
     this.petService.getPetById(petId).subscribe(
       pet => {

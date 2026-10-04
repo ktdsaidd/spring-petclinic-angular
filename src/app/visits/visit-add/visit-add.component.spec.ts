@@ -33,11 +33,14 @@ import { PetService } from '../../pets/pet.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivatedRouteStub, RouterStub } from '../../testing/router-stubs';
 import { Pet } from '../../pets/pet';
+import { Visit } from '../visit';
 import { Observable, of } from 'rxjs';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 type Spy = Mock;
 import { OwnerService } from '../../owners/owner.service';
+import { VetService } from '../../vets/vet.service';
+import { Vet } from '../../vets/vet';
 
 class PetServiceStub {
     addPet(pet: Pet): Observable<Pet> {
@@ -52,6 +55,15 @@ class OwnerServiceStub {
 }
 
 class VisitServiceStub {
+    addVisit(visit: Visit): Observable<Visit> {
+        return of();
+    }
+}
+
+class VetServiceStub {
+    getVets(): Observable<Vet[]> {
+        return of();
+    }
 }
 
 describe('VisitAddComponent', () => {
@@ -71,6 +83,7 @@ describe('VisitAddComponent', () => {
                 { provide: PetService, useClass: PetServiceStub },
                 { provide: VisitService, useClass: VisitServiceStub },
                 { provide: OwnerService, useClass: OwnerServiceStub },
+                { provide: VetService, useClass: VetServiceStub },
                 { provide: Router, useClass: RouterStub },
                 { provide: ActivatedRoute, useClass: ActivatedRouteStub }
             ]
@@ -107,5 +120,47 @@ describe('VisitAddComponent', () => {
 
     it('should create VisitAddComponent', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should load vet list on init', () => {
+        const vetService = fixture.debugElement.injector.get(VetService);
+        const testVets: Vet[] = [
+            {id: 2, firstName: 'Scott', lastName: 'Green', specialties: []},
+            {id: 1, firstName: 'James', lastName: 'Carter', specialties: []}
+        ];
+        vi.spyOn(vetService, 'getVets').mockReturnValue(of(testVets));
+        component.ngOnInit();
+        expect(component.vets.length, 'vets loaded').toBe(2);
+        expect(component.vets[0].firstName, 'sorted by firstName').toBe('James');
+    });
+
+    it('should render required vet select and allow submission only with vet selected', () => {
+        component.visit = {
+            id: null,
+            date: '2026-10-05',
+            description: 'vaccination',
+            pet: testPet
+        } as Visit;
+        fixture.detectChanges();
+        expect(component.visit.veterinarianId, 'vet unselected').toBeUndefined();
+        const selectEl: HTMLSelectElement = fixture.debugElement.nativeElement.querySelector('select[name="veterinarianId"]');
+        expect(selectEl, 'vet select rendered').toBeTruthy();
+        expect(selectEl.required, 'vet select is required on add screen').toBe(true);
+    });
+
+    it('should send veterinarianId in addVisit payload when vet selected', () => {
+        const addedVisit: Visit = {id: 2, date: '2026-10-05', description: 'vaccination', pet: testPet, veterinarianId: 1};
+        const addSpy = vi.spyOn(visitService, 'addVisit').mockReturnValue(of(addedVisit));
+        component.currentOwner = {id: 1} as any;
+        component.visit = {
+            id: null,
+            date: '2026-10-05',
+            description: 'vaccination',
+            pet: testPet,
+            veterinarianId: 1
+        } as Visit;
+        component.onSubmit(component.visit);
+        expect(addSpy).toHaveBeenCalledTimes(1);
+        expect(addSpy.mock.calls[0][0].veterinarianId, 'payload carries veterinarianId').toBe(1);
     });
 });
