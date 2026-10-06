@@ -37,6 +37,8 @@
 | `description` | `string` | 기술/소견 |
 | `pet` | `Pet` | 대상 펫 (중첩) |
 | `petId` | `number?` | 선택적 펫 FK |
+| `veterinarianId` | `number?` | 담당 수의사 FK (요청 전송용, 등록 필수/수정 비필수) |
+| `veterinarian` | `Vet?` | 담당 수의사 (응답 중첩용, 백엔드 Visit.Vet 정합) |
 
 ### PetType (`src/app/pettypes/pettype.ts`)
 
@@ -84,3 +86,9 @@ Vet * ──── * Specialty   (Vet.specialties[])
 
 - `birthDate`, `date`는 `string`으로 선언되어 있고 `moment` + `@angular/material-moment-adapter`로 날짜 UI를 처리한다 — 백엔드 직렬화 포맷(ISO 등)과 어댑터 포맷이 일치해야 한다.
 - 모델은 검증 로직을 갖지 않는다 — 폼 검증은 컴포넌트 측 Angular Reactive/Template Forms가 담당 (quick 스캔 범위 외 세부).
+
+## 변경 이력
+
+| 일자 | SR | 변경내용 | 섹션 |
+|------|----|----------|------|
+| 2026-10-05 | spec-dr-2026-00001-visit-vet-assignment | Visit 모델에 담당 수의사 필드 2종(`veterinarianId?`, `veterinarian?`) 추가 반영 | ### Visit (`src/app/visits/visit.ts`) |

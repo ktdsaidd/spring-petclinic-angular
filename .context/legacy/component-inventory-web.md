@@ -39,8 +39,8 @@
 | 컴포넌트 | 분류 | 라우트 |
 |----------|------|--------|
 | `VisitListComponent` | List | `/visits` |
-| `VisitAddComponent` | Form | `/visits/add` |
-| `VisitEditComponent` | Form | `/visits/:id/edit` |
+| `VisitAddComponent` | Form (VetService 주입: 진입 시 수의사 목록 firstName 정렬 로드, Vet 필수 선택) | `/visits/add` |
+| `VisitEditComponent` | Form (VetService 주입: 수의사 목록 로드, 선로드 방문의 수의사 선택 초기 표시, Vet 비필수) | `/visits/:id/edit` |
 
 ### PetTypes (`src/app/pettypes/`)
 
@@ -80,3 +80,9 @@
 - **재사용 패턴**: 6개 기능 도메인 모두 `list / add / edit (+ detail)` 화면 4종 세트 동일 구조 — 새 CRUD 기능 추가 시 `src/app/{feature}/` 폴더 템플릿 복제가 표준 경로.
 - **디자인 시스템**: Material prebuilt(indigo-pink) + Bootstrap 5 유틸리티 혼용; 커스텀 테마는 `src/assets/css/petclinic.css`.
 - 폼: 등록/수정 화면은 Angular 폼 기반 (`FormsModule` 전역 import → template-driven forms 중심).
+
+## 변경 이력
+
+| 일자 | SR | 변경내용 | 섹션 |
+|------|----|----------|------|
+| 2026-10-05 | spec-dr-2026-00001-visit-vet-assignment | VisitAdd/VisitEdit 컴포넌트의 VetService 의존(Vet 선택 폼 도입) 반영 | ### Visits (`src/app/visits/`) |
